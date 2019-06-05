@@ -93,6 +93,10 @@ bool NTPClient::forceUpdate() {
     Serial.println("Update from NTP Server");
   #endif
 
+  // flush any existing packets
+  while(this->_udp->parsePacket() != 0)
+    this->_udp->flush();
+
   this->sendNTPPacket();
 
   // Wait till data is there or timeout...
@@ -120,7 +124,11 @@ bool NTPClient::update() {
     if (!this->_udpSetup) {
       this->begin();
     }
-
+    
+    // flush any existing packets
+  while(this->_udp->parsePacket() != 0)
+    this->_udp->flush();
+    
     this->sendNTPPacket();
   }
 
